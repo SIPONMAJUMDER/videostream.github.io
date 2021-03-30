@@ -26,83 +26,90 @@
         max-width: 100%;
         height: 200px;
       }
-      .timer{
+      .timer {
         font-size: 18px;
         letter-spacing: 2px;
       }
-      hr{
+      hr {
         margin: 0px 0px;
-        border: 1px solid rgba(0, 0, 0, 0.2); 
+        border: 1px solid rgba(0, 0, 0, 0.2);
       }
     </style>
   </head>
-  <body>
+  <body onload="UpdateTimer()">
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-9 text-justify my-3">
           <div class="border-right border-dark h-100 px-3">
-          <table>
-            <tr>
-              <td>1)question?</td>
-            </tr>
-            <tr>
-              <td><h6>Ans -</h6></td>
-            </tr>
-            <!-- options -->
-            <tr>
-              <td>
-                <input
-                  type="radio"
-                  class="mx-2"
-                  name="Ans"
-                  id=""
-                  value="Option1"
-                />Option1
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input
-                  type="radio"
-                  class="mx-2"
-                  name="Ans"
-                  id=""
-                  value="Option2"
-                />Option2
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input
-                  type="radio"
-                  class="mx-2"
-                  name="Ans"
-                  id=""
-                  value="Option3"
-                />Option3
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input
-                  type="radio"
-                  class="mx-2"
-                  name="Ans"
-                  id=""
-                  value="Option4"
-                />Option4
-              </td>
-            </tr>
-            <!-- options -->
-          </table>
+            <table>
+              <tr>
+                <td>1)question?</td>
+              </tr>
+              <tr>
+                <td><h6>Ans -</h6></td>
+              </tr>
+              <!-- options -->
+              <tr>
+                <td>
+                  <input
+                    type="radio"
+                    class="mx-2"
+                    name="Ans"
+                    id=""
+                    value="Option1"
+                  />Option1
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input
+                    type="radio"
+                    class="mx-2"
+                    name="Ans"
+                    id=""
+                    value="Option2"
+                  />Option2
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input
+                    type="radio"
+                    class="mx-2"
+                    name="Ans"
+                    id=""
+                    value="Option3"
+                  />Option3
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input
+                    type="radio"
+                    class="mx-2"
+                    name="Ans"
+                    id=""
+                    value="Option4"
+                  />Option4
+                </td>
+              </tr>
+              <!-- options -->
+            </table>
           </div>
         </div>
         <!-- col-3 video ,timer -->
         <div class="col-md-3 mb-3">
           <div class="timer my-2 text-center">
-            <span id="date">March 30,2021</span> <span id="timer"> 00:00:00 </span>
+            <!-- date -->
+            <span id="month"></span>
+            <span id="date"></span>
+            <span id="year"></span>
+            <!-- timer -->
+            <span>|</span>
+            <span id="time">00:00:00</span>
+            <!-- timer -->
           </div>
-          <hr>
+          <hr />
           <div class="text-center my-4">
             <video
               src=""
@@ -138,8 +145,13 @@
         </div>
       </div>
     </div>
-    <button onclick="Login()">LogIn</button>
-    <button onclick="Logout()">LogOut</button>
+    <button type="button" id="Login" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="After Clicking Login Your Time Start" onclick="Login()">
+      LogIn
+    </button>
+    <button type="button" class="btn btn-secondary" onclick="Logout()">LogOut</button>
+    <!-- <button onclick="Login()">LogIn</button> -->
+    <!-- <button onclick="Logout()">LogOut</button> -->
+
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -150,39 +162,41 @@
       integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
       crossorigin="anonymous"
     ></script>
-    
-    <script>
 
-      function videostream(){
+    <script>
+      function videostream() {
         var video = document.querySelector("#videoElement");
         if (navigator.mediaDevices.getUserMedia) {
-          navigator.mediaDevices.getUserMedia({ video:true})
+          navigator.mediaDevices
+            .getUserMedia({ video: true })
             .then(function (stream) {
               video.srcObject = stream;
             })
             .catch(function (error) {
               alert("Media Access Denied or Unblock This Website");
             });
-        }
-        else{
-          alert('Media not Found')
+        } else {
+          alert("Media not Found");
         }
       }
-
 
       var elem = document.documentElement;
       function Login() {
         if (elem.requestFullscreen) {
           elem.requestFullscreen();
           videostream();
-        } else if (elem.webkitRequestFullscreen) { /* Safari */
+          timer();
+        } else if (elem.webkitRequestFullscreen) {
+          /* Safari */
           elem.webkitRequestFullscreen();
           videostream();
-        } else if (elem.msRequestFullscreen) { /* IE11 */
+          timer();
+        } else if (elem.msRequestFullscreen) {
+          /* IE11 */
           elem.msRequestFullscreen();
           videostream();
+          timer();
         }
-          
       }
       function vidOff() {
         location.reload();
@@ -192,15 +206,100 @@
         if (document.exitFullscreen) {
           document.exitFullscreen();
           vidOff();
-        } else if (document.webkitExitFullscreen) { /* Safari */
+        } else if (document.webkitExitFullscreen) {
+          /* Safari */
           document.webkitExitFullscreen();
           vidOff();
-        } else if (document.msExitFullscreen) { /* IE11 */
+        } else if (document.msExitFullscreen) {
+          /* IE11 */
           document.msExitFullscreen();
           vidOff();
         }
       }
 
+      function UpdateTimer() {
+        var month = document.getElementById("month");
+        var date = document.getElementById("date");
+        var year = document.getElementById("year");
+
+        var now = new Date();
+        var mn = now.getMonth();
+        var yr = now.getFullYear();
+        var dt = now.getDate();
+
+        var months = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+
+        month.innerHTML = months[mn];
+        date.innerHTML = dt + ",";
+        year.innerHTML = yr;
+      }
+
+      function timer() {
+        UpdateTimer();
+        var time = "00 : 00 : 20";
+        var timeover = false;
+        var tm = document.getElementById("time");
+        tm.innerHTML = time;
+        my_timer = setInterval(function () {
+          var hr = 0,
+            mt = 0,
+            sc = 0;
+          t = time.split(":");
+          hr = parseInt(t[0]);
+          mt = parseInt(t[1]);
+          sc = parseInt(t[2]);
+
+          if (sc == 0) {
+            if (mt > 0) {
+              sc = 59;
+              mt--;
+            } else if (hr > 0) {
+              mt = 59;
+              sc = 59;
+              hr--;
+            } else {
+              timeover = true;
+            }
+          } else {
+            sc--;
+          }
+
+          if (mt < 10) {
+            mt = "0" + mt;
+          }
+          if (hr < 10) {
+            hr = "0" + hr;
+          }
+          if (sc < 10) {
+            sc = "0" + sc;
+          }
+          time = hr + " : " + mt + " : " + sc;
+          if (timeover) {
+            tm = document.getElementById("time");
+            tm.innerHTML = time;
+            clearInterval(my_timer);
+            Logout();
+          } else {
+            tm = document.getElementById("time");
+            tm.innerHTML = time;
+          }
+        }, 1000);
+      }
+
+      $('#Login').tooltip('toggle')
     </script>
   </body>
 </html>
